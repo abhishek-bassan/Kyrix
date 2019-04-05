@@ -169,3 +169,11 @@ dots_small.txt
 log.txt
 gen
 
+back-end/countrymao.bin
+back-end/countrytopo.csv
+back-end/loadData.sql
+back-end/loadIpData.sql
+back-end/IpHeatMap.tsv
+back-end/IpHeatData.csv
+back-end/IpDataPref.csv
+back-end/countrymap.bin
