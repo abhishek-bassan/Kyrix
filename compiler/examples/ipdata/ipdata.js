@@ -11,7 +11,7 @@ const transforms = require("./transforms");
 const placements = require("./placements");
 
 // construct a project
-var p = new Project("ipdata", "../../../config.txt", 1500, 1000);
+var p = new Project("ipdata", "../../../config.txt")//, 1500, 1000);
 p.addRenderingParams(renderers.renderingParams);
 
 // ================== Canvas IpByCountry ===================
@@ -35,13 +35,13 @@ IpByCountryCanvasSize.addLayer(byCountryLayerSize);
 byCountryLayerSize.addRenderingFunc(renderers.byCountryRendering_2);
 
 // ================== Canvas IpByCompany ===================
-var IpByCompanyCanvas = new Canvas("IpByCompany", 1000, 10000);
+var IpByCompanyCanvas = new Canvas("IpByCompany", 1000, 20000);
 p.addCanvas(IpByCompanyCanvas);
 
 // logo layer
-var byCompanyLayer = new Layer(transforms.byCompanyTransform, true);
+var byCompanyLayer = new Layer(transforms.byCompanyTransform, false);
 IpByCompanyCanvas.addLayer(byCompanyLayer);
-//byCompanyLayer.addPlacement(placements.boxscorePlacement);
+byCompanyLayer.addPlacement(placements.boxscorePlacement);
 byCompanyLayer.addRenderingFunc(renderers.byCompanyRendering_1);
 
 
@@ -54,8 +54,9 @@ var IpByIPCanvas = new Canvas("IpByIPCanvas", 1000, 10000);
 p.addCanvas(IpByIPCanvas);
 
 // logo layer
-var byIPLayer = new Layer(transforms.byIPTransform, true);
+var byIPLayer = new Layer(transforms.byIPTransform, false);
 IpByIPCanvas.addLayer(byIPLayer);
+byIPLayer.addPlacement(placements.boxscorePlacement);
 byIPLayer.addRenderingFunc(renderers.byIPRendering_1);
 
 // ================== Canvas byElement ===================
@@ -67,6 +68,13 @@ var byElementLayer = new Layer(transforms.byElementTransform, true);
 IpbyElementCanvas.addLayer(byElementLayer);
 byElementLayer.addRenderingFunc(renderers.byElementRendering);
 
+
+
+
+// setting up initial states
+var view = new View("ipdata", 0, 0, 1000, 1000);
+p.addView(view);
+p.setInitialStates(view, IpByCountryCanvas, 0, 0);
 
 
 // ================== Average -> Size ===================
@@ -217,10 +225,6 @@ p.addJump(new Jump(IpByIPCanvas, IpbyElementCanvas, "semantic_zoom", {selector :
     viewport : newViewport, predicates : newPredicate, name : jumpName}));
 
 
-// setting up initial states
-var view = new View("ipdata", 0, 0, 1000, 1000);
-p.addView(view);
-p.setInitialStates(view, IpByCountryCanvas, 0, 0);
 
 
 

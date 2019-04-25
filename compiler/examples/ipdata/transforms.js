@@ -89,8 +89,10 @@ var byCountryTransform_1 = new Transform("select * from IPCountryDataGeo;",
         var id = row[5] - 1;
         var total = row[6];
         var ret = [];
-        var y = Math.floor(id / 6);
-        var x = id - y * 6;
+        var y = 55 + id*55;
+        var x = 0;
+        var cent_x = 250*3;
+        var cent_y = (3/2)*55 + id*(55);
         ret.push(country);
         ret.push(countryCode);
         ret.push(org);
@@ -98,14 +100,17 @@ var byCountryTransform_1 = new Transform("select * from IPCountryDataGeo;",
         ret.push(average);
         ret.push(row);
         //ret.push(total);
-        ret.push((x) * 120 + 80);
-        ret.push((y) * 70 + 80);
+        ret.push(x);
+        ret.push(y);
+        ret.push(cent_x)
+        ret.push(cent_y)
+        ret.push(id);
         return Java.to(ret ,"java.lang.String[]");
     },
-    ["country","countryCode","org","count","average","data","x","y"],
+    ["country","countryCode","org","count","average","data","x","y","cent_x","cent_y","id"],
     true);
 
-    var byIPTransform = new Transform("select * from IPData;",
+    var byIPTransform = new Transform("select * from IPDataRank;",
     "ipdata",
     function (row){
         var ip = row[0];
@@ -114,15 +119,25 @@ var byCountryTransform_1 = new Transform("select * from IPCountryDataGeo;",
         var countryCode = row[4]; 
         var org = row[7];
         var ret = [];
+        var id = row[8] - 1;
+        var y = 55 + id*55;
+        var x = 0;
+        var cent_x = 250*3;
+        var cent_y = 55 + id*(55/2); 
         ret.push(ip);
         ret.push(threat);
         ret.push(country);
         ret.push(countryCode);
         ret.push(org);
         ret.push(row);
+        ret.push(id);
+        ret.push(x);
+        ret.push(y);
+        ret.push(cent_x)
+        ret.push(cent_y)
         return Java.to(ret ,"java.lang.String[]");
     },
-    ["ip","threat","country","countryCode","org","data"],
+    ["ip","threat","country","countryCode","org","data","id","x","y","cent_x","cent_y"],
     true);
 
 

@@ -246,7 +246,7 @@ var byCompanyRendering_1 = function (svg, data, args) {
 
     // playername header bkg rect
     g.append("rect")
-        .attr("width", params.playerNameCellWidth)
+        .attr("width", params.playerNameCellWidth*4)
         .attr("height", params.headerHeight)
         .attr("x", 0)
         .attr("y", headerStartHeight)
@@ -262,20 +262,34 @@ var byCompanyRendering_1 = function (svg, data, args) {
         .attr("text-anchor", "middle")
         .style("fill-opacity", 1)
         .style("fill", params.headerfontcolor);
+    
+    Col = ["","Count","Average Threat"]
+    for (var i = 0; i< 3; i++)
+    {
+        g.append("text")
+        .text(Col[i])
+        .attr("x", i*params.playerNameCellWidth + params.playerNameCellWidth / 2)
+        .attr("y", headerStartHeight + params.headerHeight / 2)
+        .attr("dy", ".35em")
+        .attr("font-size", params.headerfontsize)
+        .attr("text-anchor", "middle")
+        .style("fill-opacity", 1)
+        .style("fill", params.headerfontcolor);
+    }
 
     // player name bkg rect
     g.selectAll(".playernamerect")
         .data(data)
         .enter()
         .append("rect")
-        .attr("width", params.playerNameCellWidth)
+        .attr("width", params.playerNameCellWidth*4)
         .attr("height", params.cellHeight)
         .attr("x", 0)
         .attr("y", function (d, i) {
-            return firstRowHeight + i * params.cellHeight;
+            return d.y;
         })
         .style("fill", function (d, i) {
-            if (i % 2 == 0) return params.evenrowcolor;
+            if (d.id % 2 == 0) return params.evenrowcolor;
             return params.oddrowcolor;
         });
 
@@ -315,7 +329,33 @@ var byCompanyRendering_1 = function (svg, data, args) {
         .call(params.textwrap, params.playerNameCellWidth - params.playerphotoradius * 2 - params.playerphotoleftmargin - 25);
 
     // team logo
-    
+    Vale = ["","count","average"]
+    for (var i = 0; i< 3; i++)
+    {
+        g.selectAll(".ipdata"+i)
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function(d) {return d[Vale[i]];})
+        .attr("x", function() {
+            //console.log(d);
+            var textLeft = params.playerphotoleftmargin + params.playerphotoradius * 2;
+            //return (params.playerNameCellWidth - textLeft) / 2 + textLeft;
+            return i*params.playerNameCellWidth + textLeft + 15;
+        })
+        .attr("y", function (d, i) {
+            return firstRowHeight + (i + 0.5) * params.cellHeight;
+        })
+        .attr("dy", ".35em")
+        .attr("font-size", params.playernamefontsize)
+        .attr("text-anchor", "left")
+        .style("fill-opacity", 1)
+        .style("fill", params.bodyfontcolor)
+        .call(params.textwrap, params.playerNameCellWidth - params.playerphotoradius * 2 - params.playerphotoleftmargin - 25);
+
+    // team logo
+    }
+
 
     // shadow rect
     g.append("rect")
@@ -326,121 +366,121 @@ var byCompanyRendering_1 = function (svg, data, args) {
         .style("fill", "white");
 };
 
-var byCompanyRendering_2 = function (svg, data, args) {
+// var byCompanyRendering_2 = function (svg, data, args) {
 
-    // create a new g
-    var g = svg.append("g");
-    var height = args.canvasH;
-    var params = args.renderingParams;
+//     // create a new g
+//     var g = svg.append("g");
+//     var height = args.canvasH;
+//     var params = args.renderingParams;
 
-    // precompute some stuff
-    //var headerStartHeight = height / 2 - ((data.length + 1) * params.cellHeight + params.headerHeight) / 2;
-    var headerStartHeight = 5;
-    var firstRowHeight = headerStartHeight + params.headerHeight;
-    var avg_fields = ["FG_PCT", "FG3_PCT", "FT_PCT"];
-    var fields = ["country","countryCode","count","average"];
+//     // precompute some stuff
+//     //var headerStartHeight = height / 2 - ((data.length + 1) * params.cellHeight + params.headerHeight) / 2;
+//     var headerStartHeight = 5;
+//     var firstRowHeight = headerStartHeight + params.headerHeight;
+//     var avg_fields = ["FG_PCT", "FG3_PCT", "FT_PCT"];
+//     var fields = ["country","countryCode","count","average"];
 
-    // loop over stats
-    var curLeft = params.playerNameCellWidth;
-    for (var i = 0; i < fields.length; i ++) {
+//     // loop over stats
+//     var curLeft = params.playerNameCellWidth;
+//     for (var i = 0; i < fields.length; i ++) {
 
-        // get precision
-        var precision = 0;
-        if (avg_fields.indexOf(fields[i]) != -1)
-            precision = 2;
+//         // get precision
+//         var precision = 0;
+//         if (avg_fields.indexOf(fields[i]) != -1)
+//             precision = 2;
 
-        // display name of the current field
-        var displayName = (fields[i] == 'turnover' ? 'TO' :
-            (fields[i] == 'plus_minus' ? '+/-' :
-                (fields[i] == "start_position" ? "POS" : fields[i].toUpperCase())));
+//         // display name of the current field
+//         var displayName = (fields[i] == 'turnover' ? 'TO' :
+//             (fields[i] == 'plus_minus' ? '+/-' :
+//                 (fields[i] == "start_position" ? "POS" : fields[i].toUpperCase())));
 
-        var curColumnWidth = Math.min(displayName.length * params.avgcharwidth, params.statsCellMaxWidth);
-        // stats header bkg rect
-        g.append("rect")
-            .attr("width", curColumnWidth)
-            .attr("height", params.headerHeight)
-            .attr("x", curLeft)
-            .attr("y", headerStartHeight)
-            .style("fill", params.headerbkgcolor);
+//         var curColumnWidth = Math.min(displayName.length * params.avgcharwidth, params.statsCellMaxWidth);
+//         // stats header bkg rect
+//         g.append("rect")
+//             .attr("width", curColumnWidth*6)
+//             .attr("height", params.headerHeight)
+//             .attr("x", curLeft)
+//             .attr("y", headerStartHeight)
+//             .style("fill", params.headerbkgcolor);
 
-        // stats header text
-        g.append("text")
-            .text(displayName)
-            .attr("x", curLeft + curColumnWidth / 2)
-            .attr("y", headerStartHeight + params.headerHeight / 2)
-            .attr("dy", ".35em")
-            .attr("font-size", params.headerfontsize)
-            .attr("text-anchor", "middle")
-            .style("fill-opacity", 1)
-            .style("fill", params.headerfontcolor);
+//         // stats header text
+//         g.append("text")
+//             .text(displayName)
+//             .attr("x", curLeft + curColumnWidth / 2)
+//             .attr("y", headerStartHeight + params.headerHeight / 2)
+//             .attr("dy", ".35em")
+//             .attr("font-size", params.headerfontsize)
+//             .attr("text-anchor", "middle")
+//             .style("fill-opacity", 1)
+//             .style("fill", params.headerfontcolor);
 
-        // player stats bkg rect
-        g.selectAll(".playerstatsrect")
-            .data(data)
-            .enter()
-            .append("rect")
-            .attr("width", curColumnWidth)
-            .attr("height", params.cellHeight)
-            .attr("x", curLeft)
-            .attr("y", function (d, i) {
-                return firstRowHeight + i * params.cellHeight;
-            })
-            .style("fill", function (d, i) {
-                if (i % 2 == 0) return params.evenrowcolor;
-                return params.oddrowcolor;
-            });
+//         // player stats bkg rect
+//         g.selectAll(".playerstatsrect")
+//             .data(data)
+//             .enter()
+//             .append("rect")
+//             .attr("width", curColumnWidth*6)
+//             .attr("height", params.cellHeight)
+//             .attr("x", curLeft)
+//             .attr("y", function (d, i) {
+//                 return firstRowHeight + i * params.cellHeight;
+//             })
+//             .style("fill", function (d, i) {
+//                 if (i % 2 == 0) return params.evenrowcolor;
+//                 return params.oddrowcolor;
+//             });
 
-        // player stats text
-        g.selectAll(".playerstatstext")
-            .data(data)
-            .enter()
-            .append("text")
-            .text(function (d) {
-                return (fields[i] == 'start_position' ? d[fields[i]] : (+d[fields[i]]).toFixed(precision));
-            })
-            .attr("x", curLeft + curColumnWidth / 2)
-            .attr("y", function (d, i) {
-                return firstRowHeight + (i + 0.5) * params.cellHeight;
-            })
-            .attr("font-size", params.bodyfontsize)
-            .attr("text-anchor", "middle")
-            .attr("dy", ".35em")
-            .style("fill-opacity", 1)
-            .style("fill", params.bodyfontcolor);
+//         // player stats text
+//         g.selectAll(".playerstatstext")
+//             .data(data)
+//             .enter()
+//             .append("text")
+//             .text(function (d) {
+//                 return (fields[i] == 'start_position' ? d[fields[i]] : (+d[fields[i]]).toFixed(precision));
+//             })
+//             .attr("x", curLeft + curColumnWidth / 2)
+//             .attr("y", function (d, i) {
+//                 return firstRowHeight + (i + 0.5) * params.cellHeight;
+//             })
+//             .attr("font-size", params.bodyfontsize)
+//             .attr("text-anchor", "middle")
+//             .attr("dy", ".35em")
+//             .style("fill-opacity", 1)
+//             .style("fill", params.bodyfontcolor);
 
-        // team stats bkg rect
-        var startHeight = height / 2
-            - ((data.length + 1) * params.cellHeight + params.headerHeight) / 2
-            + params.headerHeight + params.cellHeight * data.length;
-        g.append("rect")
-            .attr("width", curColumnWidth)
-            .attr("height", params.cellHeight)
-            .attr("x", curLeft)
-            .attr("y", startHeight)
-            .style("fill", (data.length % 2 == 0 ? params.evenrowcolor : params.oddrowcolor));
+//         // team stats bkg rect
+//         var startHeight = height / 2
+//             - ((data.length + 1) * params.cellHeight + params.headerHeight) / 2
+//             + params.headerHeight + params.cellHeight * data.length;
+//         g.append("rect")
+//             .attr("width", curColumnWidth)
+//             .attr("height", params.cellHeight)
+//             .attr("x", curLeft)
+//             .attr("y", startHeight)
+//             .style("fill", (data.length % 2 == 0 ? params.evenrowcolor : params.oddrowcolor));
 
-        // team stats text
-        if (fields[i] != 'start_position') {
-            var overall = 0;
-            for (var j = 0; j < data.length; j ++)
-                overall += +data[j][fields[i]];
-            if (avg_fields.indexOf(fields[i]) != -1)
-                overall = overall / data.length;
-            else if (fields[i] == "PLUS_MINUS")
-                overall = overall / 5;
-            g.append("text")
-                .text(overall.toFixed(precision))
-                .attr("x", curLeft + curColumnWidth / 2)
-                .attr("y", startHeight + params.cellHeight / 2)
-                .attr("font-size", params.bodyfontsize)
-                .attr("text-anchor", "middle")
-                .attr("dy", ".35em")
-                .style("fill-opacity", 1)
-                .style("fill", params.bodyfontcolor);
-        }
-        curLeft += curColumnWidth;
-    }
-};
+//         // team stats text
+//         if (fields[i] != 'start_position') {
+//             var overall = 0;
+//             for (var j = 0; j < data.length; j ++)
+//                 overall += +data[j][fields[i]];
+//             if (avg_fields.indexOf(fields[i]) != -1)
+//                 overall = overall / data.length;
+//             else if (fields[i] == "PLUS_MINUS")
+//                 overall = overall / 5;
+//             g.append("text")
+//                 .text(overall.toFixed(precision))
+//                 .attr("x", curLeft + curColumnWidth / 2)
+//                 .attr("y", startHeight + params.cellHeight / 2)
+//                 .attr("font-size", params.bodyfontsize)
+//                 .attr("text-anchor", "middle")
+//                 .attr("dy", ".35em")
+//                 .style("fill-opacity", 1)
+//                 .style("fill", params.bodyfontcolor);
+//         }
+//         curLeft += curColumnWidth;
+//     }
+// };
 
 
 
@@ -487,7 +527,7 @@ var byIPRendering_1 = function (svg, data, args) {
 
     // playername header bkg rect
     g.append("rect")
-        .attr("width", params.playerNameCellWidth)
+        .attr("width", params.playerNameCellWidth*3)
         .attr("height", params.headerHeight)
         .attr("x", 0)
         .attr("y", headerStartHeight)
@@ -503,20 +543,33 @@ var byIPRendering_1 = function (svg, data, args) {
         .attr("text-anchor", "middle")
         .style("fill-opacity", 1)
         .style("fill", params.headerfontcolor);
+        Col = ["","Threat Level"]
+        for (var i = 0; i< 2; i++)
+        {
+            g.append("text")
+            .text(Col[i])
+            .attr("x", i*params.playerNameCellWidth + params.playerNameCellWidth / 2)
+            .attr("y", headerStartHeight + params.headerHeight / 2)
+            .attr("dy", ".35em")
+            .attr("font-size", params.headerfontsize)
+            .attr("text-anchor", "middle")
+            .style("fill-opacity", 1)
+            .style("fill", params.headerfontcolor);
+        }
 
     // player name bkg rect
     g.selectAll(".playernamerect")
         .data(data)
         .enter()
         .append("rect")
-        .attr("width", params.playerNameCellWidth)
+        .attr("width", params.playerNameCellWidth*3)
         .attr("height", params.cellHeight)
         .attr("x", 0)
         .attr("y", function (d, i) {
-            return firstRowHeight + i * params.cellHeight;
+            return d.y;
         })
         .style("fill", function (d, i) {
-            if (i % 2 == 0) return params.evenrowcolor;
+            if (d.id % 2 == 0) return params.evenrowcolor;
             return params.oddrowcolor;
         });
 
@@ -556,7 +609,33 @@ var byIPRendering_1 = function (svg, data, args) {
         .call(params.textwrap, params.playerNameCellWidth - params.playerphotoradius * 2 - params.playerphotoleftmargin - 25);
 
     // team logo
-    
+    Vale = ["","threat"]
+    for (var i = 0; i< 2; i++)
+    {
+        g.selectAll(".playername")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(function(d) {return d[Vale[i]];})
+        .attr("x", function() {
+            //console.log(d);
+            var textLeft = params.playerphotoleftmargin + params.playerphotoradius * 2;
+            //return (params.playerNameCellWidth - textLeft) / 2 + textLeft;
+            return i*params.playerNameCellWidth + textLeft + 15;
+        })
+        .attr("y", function (d, i) {
+            return firstRowHeight + (i + 0.5) * params.cellHeight;
+        })
+        .attr("dy", ".35em")
+        .attr("font-size", params.playernamefontsize)
+        .attr("text-anchor", "left")
+        .style("fill-opacity", 1)
+        .style("fill", params.bodyfontcolor)
+        .call(params.textwrap, params.playerNameCellWidth - params.playerphotoradius * 2 - params.playerphotoleftmargin - 25);
+
+    // team logo
+    }
+
 
     // shadow rect
     g.append("rect")
@@ -611,6 +690,6 @@ module.exports = {
      byCountryRendering_1 : byCountryRendering_1,
      byCompanyRendering_1 : byCompanyRendering_1,
      byCountryRendering_2 : byCountryRendering_2,
-     byCompanyRendering_2 : byCompanyRendering_2,
+    //  byCompanyRendering_2 : byCompanyRendering_2,
      byIPRendering_1 : byIPRendering_1
 };

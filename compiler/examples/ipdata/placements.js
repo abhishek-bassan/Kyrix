@@ -13,11 +13,12 @@ var playByPlayPlacement = {
 };
 
 var boxscorePlacement = {
-    "centroid_x" : "full",
-    "centroid_y" : "full",
-    "width" : "full",
-    "height" : "full"
+    "centroid_x" : "col:cent_x",
+    "centroid_y" : "col:cent_y",
+    "width" : "con:250",
+    "height" : "con:55"
 };
+
 var worldMapPlacement = {
     "centroid_x" : "col:bbox_x",
     "centroid_y" : "col:bbox_y",
